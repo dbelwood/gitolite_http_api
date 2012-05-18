@@ -1,24 +1,10 @@
 require 'api'
 require 'json'
+require 'shared_context'
 
 describe "/repos" do
-	include Rack::Test::Methods
-
-	REPO_ROOT = File.join(File.expand_path(File.dirname(__FILE__)), '../repos').to_s
-
-	before(:each) do
-		FileUtils.mkdir_p "#{REPO_ROOT}/gitolite-admin"
-		Gitolite::GitoliteAdmin.bootstrap("#{REPO_ROOT}/gitolite-admin", {:user => "admin", :perm => "RW"})
-	end
-
-	after(:each) do
-		FileUtils.rm_rf("#{REPO_ROOT}/gitolite-admin")
-	end
-
-	def app
-		Git::Api
-	end
-
+	include_context "Admin repo handling"
+	
 	context "GET /repos" do
 		it "should reply with [] if no repos exist" do
 			response = get "/v1/repos"
@@ -42,7 +28,7 @@ describe "/repos" do
 		it "should error upon adding an invalid repo" do
 			response = post "/v1/repos", :invalid_attr => "test"
 			response.status.should == 500
-			response.body.should == "Invalid repository definition."
+			response.body.should == "owner, name are required."
 		end
 	end
 	context "GET /repos/<repo_id>" do 
