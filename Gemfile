@@ -2,6 +2,7 @@ source "http://rubygems.org"
 
 gem "gitolite"
 gem "grape"
+gem "thin"
 
 group :testing do
 	gem "rspec"
