@@ -23,6 +23,10 @@ module Git
 				error!("Group #{params[:group_name]} does not exist.", 404) unless @@admin_repo.config.has_group? group_name
 				@@admin_repo.config.get_group(group_name)
 			end
+
+			def validate_required_fields params, *fields
+				error!("#{fields.join(", ")} #{(fields.size > 1)? 'are': 'is'} required.", 500) unless fields.all? {|param| params[param]}
+			end
 		end
 
 		before { init_admin_repo! }
@@ -39,6 +43,7 @@ module Git
 
 			post do
 				# Determine required fields are present
+				validate_required_fields params, "owner", "name"
 				error!("Invalid repository definition.", 500) if params[:owner].nil? or params[:name].nil?
 
 				# Validate name attribute
@@ -59,6 +64,7 @@ module Git
 			delete ':repo_name' do
 				repo = get_repo params[:repo_name]
 				@@admin_repo.config.rm_repo repo
+				@@admin_repo.save_and_apply "Removed repo #{params[:repo_name]}."
 				present repo, :with => Git::Entities::Repo, :full => true
 			end
 		end
@@ -76,7 +82,7 @@ module Git
 
 			post do
 				# Determine required fields are present
-				error!("Invalid group definition.", 500) if params[:name].nil?
+				validate_required_fields params, "name"
 
 				# Validate name attribute
 				error!("#{params[:name]} is an invalid name for a group.", 500) unless params[:name] =~ /^[\w\d\.]+$/
@@ -89,10 +95,44 @@ module Git
 				present @@admin_repo.config.get_group(params[:name])
 			end
 
-			delete do
+			delete ':group_name' do
 				group = get_group params[:group_name]
 				@@admin_repo.config.rm_group group
+				@@admin_repo.save_and_apply "Removed group #{params[:group_name]}."
 				present group
+			end
+
+			segment '/:group_name' do
+				resource '/members' do
+					before { @group = get_group params[:group_name] }
+					get do
+						present @group.users
+					end
+
+					post do
+						validate_required_fields params, "users"
+						@group.add_users params[:users]
+						@@admin_repo.save_and_apply "Added group members #{params[:users]}."
+					end
+
+					delete ':user_name' do
+						@group.remove params[:user_name]
+						@@admin_repo.save_and_apply "Removed group members #{params[:user_name]}."
+					end
+				end
+			end
+		end
+
+		resource :keys do
+			get do
+				present @@admin_repo.ssh_keys[params[:email]], :with => Git::Entities::Key
+			end
+
+			post do
+				validate_required_fields params, "email", "type", "blob"
+				@@admin_repo.add_key Gitolite::SSHKey.new(params[:type], params[:blob], params[:email])
+				@@admin_repo.save_and_apply "Added ssh key for #{params[:email]}."
+				"SSH Key successfully added for #{params[:email]}."
 			end
 		end
 	end
