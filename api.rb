@@ -7,11 +7,9 @@ module Git
 		version 'v1', :using => :path
 		format :json
 
-		@@repo_path = "repos/gitolite-admin"
-
 		helpers do
 			def init_admin_repo!
-				@@admin_repo ||= Gitolite::GitoliteAdmin.new(@@repo_path)
+				@@admin_repo ||= Gitolite::GitoliteAdmin.new(ENV["REPO_ROOT"] + "/gitolite-admin")
 			end
 
 			def get_repo repo_name
