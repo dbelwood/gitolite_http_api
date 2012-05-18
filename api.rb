@@ -9,7 +9,7 @@ module Git
 
 		helpers do
 			def init_admin_repo!
-				@@admin_repo ||= Gitolite::GitoliteAdmin.new(ENV["REPO_ROOT"] + "/gitolite-admin")
+				@@admin_repo ||= Gitolite::GitoliteAdmin.new(ENV["REPO_PATH"] + "/gitolite-admin")
 			end
 
 			def get_repo repo_name
