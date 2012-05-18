@@ -23,6 +23,9 @@ module Git
 		end
 
 		class Key < Grape::Entity
+			expose :type
+			expose :email
+			expose :blob
 		end
 	end
 end
