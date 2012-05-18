@@ -1,1 +1,1 @@
-web: rackup -s thin -p 8080
+web: bundle exec rackup -s thin -p 8080
