@@ -1,0 +1,1 @@
+web: rackup -s thin -p 8080
