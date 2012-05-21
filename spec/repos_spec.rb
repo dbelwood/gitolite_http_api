@@ -6,7 +6,7 @@ describe "/repos" do
 	include_context "Admin repo handling"
 	
 	context "GET /repos" do
-		it "should reply with [] if no repos exist" do
+		it "should reply with the default repo" do
 			response = get "/v1/repos"
 			response.status.should == 200
 			JSON.parse(response.body).should == [{"name" => "gitolite-admin", "permissions"=>[{"users"=>["admin"], "refs"=>"", "permission"=>"RW"}]}]
