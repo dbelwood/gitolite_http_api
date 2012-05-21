@@ -1,6 +1,7 @@
 require 'grape'
 require 'gitolite'
 require 'entities'
+require 'permission_set'
 
 module Git
 	class Api < Grape::API
@@ -64,6 +65,39 @@ module Git
 				@@admin_repo.config.rm_repo repo
 				@@admin_repo.save_and_apply "Removed repo #{params[:repo_name]}."
 				present repo, :with => Git::Entities::Repo, :full => true
+			end
+
+			segment '/:repo_name/permissions/:user_name' do
+				get do
+					repo = get_repo params[:repo_name]
+					perms = PermissionSet.permissions_for_user repo, params[:user_name]
+					error!("Specified user has no permissions on repo #{params[:repo_name]}.", 404) if perms.keys.size == 0
+					perms
+				end
+
+				post do
+					validate_required_fields params, "permissions"
+
+					repo = get_repo params[:repo_name]
+					repo.add_permission params[:permissions], "", [params[:user_name]]
+					@@admin_repo.save_and_apply "Add permission #{params[:permissions]} for user #{params[:user_name]} on repo #{params[:repo_name]}."
+					PermissionSet.permissions_for_user repo, params[:user_name]
+				end
+
+				put do
+					validate_required_fields params, "permissions"
+
+					repo = get_repo params[:repo_name]
+					repo.add_permission params[:permissions], "", [params[:user_name]]
+					@@admin_repo.save_and_apply "Updating permission #{params[:permissions]} for user #{params[:user_name]} on repo #{params[:repo_name]}."
+					PermissionSet.permissions_for_user repo, params[:user_name]
+				end
+
+				delete do
+					repo = get_repo params[:repo_name]
+					PermissionSet.remove_permissions_for_user repo, params[:user_name]
+					@@admin_repo.save_and_apply "Removing permissions for user #{params[:user_name]} on repo #{params[:repo_name]}."
+				end
 			end
 		end
 
