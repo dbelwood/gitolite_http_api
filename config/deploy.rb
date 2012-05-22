@@ -34,14 +34,19 @@ namespace :deploy do
   task :init_repo do
   	run "cd #{deploy_to}/current && bundle exec rake setup"
   end
-  after "deploy:create_symlink", "deploy:init_repo"
+
+  task :create_app_service do
+  	run "cd #{deploy_to}/current && bundle exec foreman export upstart /etc/init -a #{application} -u #{user} -l #{shared_path}/log"
+  end
+
+  after "deploy:create_symlink", "deploy:init_repo", "create_app_service"
   task :restart do
-    run "if [ -f #{unicorn_pid} ]; then kill -USR2 `cat #{unicorn_pid}`; else cd #{deploy_to}/current && bundle exec unicorn -c #{unicorn_conf} -E #{rails_env} -D; fi"
+    run "/sbin/restart gitolite_http_api"
   end
   task :start do
-    run "cd #{deploy_to}/current && bundle exec unicorn -c #{unicorn_conf} -E #{rails_env} -D"
+    run "/sbin/start gitolite_http_api"
   end
   task :stop do
-    run "if [ -f #{unicorn_pid} ]; then kill -QUIT `cat #{unicorn_pid}`; fi"
+    run "/sbin/stop gitolite_http_api"
   end
 end
