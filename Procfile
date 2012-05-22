@@ -1,1 +1,1 @@
-web: bundle exec unicorn -c ./config/unicorn.rb -p $PORT --daemonize
+web: bundle exec unicorn -c ./config/unicorn.rb --daemonize
