@@ -1,1 +1,1 @@
-web: bundle exec rackup -s unicorn -p 80 --daemonize
+web: bundle exec unicorn -c ./config/unicorn.rb -p 80 --daemonize
