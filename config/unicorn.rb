@@ -10,7 +10,8 @@ old_pid = pid_file + '.oldbin'
 timeout 30
 worker_processes 1 # increase or decrease
 #listen socket_file, :backlog => 1024
-listen ENV['PORT'], :backlog => 1024
+#listen ENV['PORT'], :backlog => 1024
+listen '0.0.0.0:8080', :backlog => 1024
  
 pid pid_file
 stderr_path err_log
