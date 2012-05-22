@@ -1,1 +1,1 @@
-web: bundle exec unicorn -c ./config/unicorn.rb --daemonize
+web: bundle exec unicorn -c ./config/unicorn.rb
