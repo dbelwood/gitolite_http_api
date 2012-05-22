@@ -6,4 +6,4 @@ $: << File.join(File.expand_path(File.dirname(__FILE__)), '/lib')
 ENV["REPO_PATH"] = File.join(File.expand_path(File.dirname(__FILE__)), '/repo')
 
 # gitolite-admin master path
-ENV["GLA_MASTER_PATH"] = "gitolite:gitolite-admin"
+ENV["GLA_MASTER_PATH"] = "git@ec2-184-73-93-122.compute-1.amazonaws.com:gitolite-admin"
