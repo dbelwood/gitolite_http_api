@@ -4,6 +4,7 @@ gem "gitolite"
 gem "grape"
 gem "unicorn"
 gem "capistrano"
+gem "foreman"
 
 group :testing do
 	gem "rspec"
