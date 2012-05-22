@@ -1,1 +1,1 @@
-web: bundle exec rackup -s unicorn -p 8081 --daemonize
+web: bundle exec rackup -s unicorn -p 80 --daemonize
