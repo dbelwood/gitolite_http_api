@@ -8,7 +8,7 @@ err_log = "#{root}/log/unicorn_error.log"
 old_pid = pid_file + '.oldbin'
  
 timeout 30
-worker_processes 2 # increase or decrease
+worker_processes 1 # increase or decrease
 #listen socket_file, :backlog => 1024
 listen ENV['PORT'], :backlog => 1024
  
