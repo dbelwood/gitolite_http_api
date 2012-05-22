@@ -39,7 +39,7 @@ namespace :deploy do
   	run "cd #{deploy_to}/current && bundle exec foreman export upstart /etc/init -a #{application} -u #{user} -l #{shared_path}/log"
   end
 
-  after "deploy:create_symlink", "deploy:init_repo", "create_app_service"
+  after "deploy:create_symlink", "deploy:init_repo", "deploy:create_app_service"
   task :restart do
     run "/sbin/restart gitolite_http_api"
   end
