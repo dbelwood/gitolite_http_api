@@ -8,6 +8,10 @@ module Git
 		version 'v1', :using => :path
 		format :json
 
+		rescue_from :all do |e|
+			Grape::API::logger.error "#{e.message}\n\n#{e.backtrace.join("\n")}"
+		end
+
 		helpers do
 			def init_admin_repo!
 				@@admin_repo ||= Gitolite::GitoliteAdmin.new(ENV["REPO_PATH"] + "/gitolite-admin")
