@@ -18,7 +18,7 @@ set :group, user
 set :runner, user
  
 set :host, "api@ec2-184-73-92-234.compute-1.amazonaws.com" # We need to be able to SSH to that box as this user.
-set :ssh_options, {:user => "api", :keys => [File.join(ENV["HOME"], "pems", "MMAdmin.pem")], :forward_agent => true}
+set :ssh_options, {:user => "api", :keys => [File.join(ENV["HOME"], "pems", "MMAdmin.pem"), File.join(ENV["HOME"], ".ssh", "gitolite_http_api_deploy")], :forward_agent => true}
 role :web, host
 role :app, host
  
@@ -31,7 +31,7 @@ set :unicorn_pid, "#{deploy_to}/shared/pids/unicorn.pid"
  
 # Unicorn control tasks
 namespace :deploy do
-  task :finalize_update do
+  task :migrate do
   	run "cd #{deploy_to}/current && bundle exec rake setup"
   end
   task :restart do
