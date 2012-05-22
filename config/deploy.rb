@@ -41,12 +41,12 @@ namespace :deploy do
 
   after "deploy:create_symlink", "deploy:init_repo", "deploy:create_app_service"
   task :restart do
-    run "/sbin/restart #{application}"
+    run "sudo /sbin/restart #{application}"
   end
   task :start do
-    run "/sbin/start #{application}"
+    run "sudo /sbin/start #{application}"
   end
   task :stop do
-    run "/sbin/stop #{application}"
+    run "sudo /sbin/stop #{application}"
   end
 end
