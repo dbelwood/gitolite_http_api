@@ -36,7 +36,7 @@ namespace :deploy do
   end
 
   task :create_app_service do
-  	run "cd #{deploy_to}/current && rbenvsudo foreman export upstart /etc/init -a #{application} -u #{user} -l #{shared_path}/log"
+  	run "cd #{deploy_to}/current && rbenv sudo foreman export upstart /etc/init -a #{application} -u #{user} -l #{shared_path}/log"
   end
 
   after "deploy:create_symlink", "deploy:init_repo", "deploy:create_app_service"
