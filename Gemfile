@@ -2,8 +2,8 @@ source "http://rubygems.org"
 
 gem "gitolite"
 gem "grape"
-gem "thin"
-gem "foreman"
+gem "unicorn"
+gem "capistrano"
 
 group :testing do
 	gem "rspec"
