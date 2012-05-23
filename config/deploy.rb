@@ -17,7 +17,7 @@ set :user, "api"
 set :group, user
 set :runner, user
  
-set :host, "api@ec2-184-73-92-234.compute-1.amazonaws.com" # We need to be able to SSH to that box as this user.
+set :host, "api@ec2-23-22-145-95.compute-1.amazonaws.com" # We need to be able to SSH to that box as this user.
 set :ssh_options, {:user => "api", :keys => [File.join(ENV["HOME"], "pems", "MMAdmin.pem"), File.join(ENV["HOME"], ".ssh", "gitolite_http_api_deploy"), File.join(ENV["HOME"], ".ssh", "server")], :forward_agent => true}
 role :web, host
 role :app, host
